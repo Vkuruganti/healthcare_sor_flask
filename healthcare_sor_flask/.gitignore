@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+healthcare_records.db
+instance/
+.DS_Store

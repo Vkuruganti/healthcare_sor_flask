@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}CareRecord | {{ "Edit" if mode == "edit" else "New" }} Record{% endblock %}
+
+{% block content %}
+  <section class="form-shell">
+    <div class="form-heading">
+      <p>{{ "Update system of record" if mode == "edit" else "Create system of record" }}</p>
+      <h1>{{ "Edit patient record" if mode == "edit" else "New patient record" }}</h1>
+    </div>
+
+    <form class="record-form" method="post">
+      <fieldset>
+        <legend>Patient</legend>
+        <label>
+          <span>Patient name</span>
+          <input name="patient_name" value="{{ record.patient_name }}" required autocomplete="name">
+        </label>
+        <label>
+          <span>Patient ID</span>
+          <input name="patient_id" value="{{ record.patient_id }}" required>
+        </label>
+        <label>
+          <span>Date of birth</span>
+          <input type="date" name="dob" value="{{ record.dob }}">
+        </label>
+        <label class="wide">
+          <span>Patient address</span>
+          <input name="patient_address" value="{{ record.patient_address }}" autocomplete="street-address">
+        </label>
+        <label>
+          <span>Patient phone</span>
+          <input type="tel" name="patient_phone" value="{{ record.patient_phone }}" autocomplete="tel">
+        </label>
+        <label>
+          <span>Patient email</span>
+          <input type="email" name="patient_email" value="{{ record.patient_email }}" autocomplete="email">
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Care team</legend>
+        <label class="wide">
+          <span>Medical condition</span>
+          <input name="medical_condition" value="{{ record.medical_condition }}">
+        </label>
+        <label>
+          <span>Doctor name</span>
+          <input name="doctor_name" value="{{ record.doctor_name }}">
+        </label>
+        <label>
+          <span>Doctor ID</span>
+          <input name="doctor_id" value="{{ record.doctor_id }}">
+        </label>
+        <label class="wide">
+          <span>Doctor notes</span>
+          <textarea name="doctor_notes" rows="5">{{ record.doctor_notes }}</textarea>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <div class="legend-row">
+          <legend>Custom fields</legend>
+          <button class="small-button" type="button" id="add-field">Add field</button>
+        </div>
+        <div id="custom-fields" class="custom-fields">
+          {% for label, value in extras.items() %}
+            <div class="custom-row">
+              <label>
+                <span>Field name</span>
+                <input name="extra_label[]" value="{{ label }}">
+              </label>
+              <label>
+                <span>Value</span>
+                <input name="extra_value[]" value="{{ value }}">
+              </label>
+              <button class="remove-button" type="button" aria-label="Remove custom field">×</button>
+            </div>
+          {% endfor %}
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <a class="soft-button muted" href="{{ url_for('index') }}">Cancel</a>
+        <button class="submit-button" type="submit">{{ "Save changes" if mode == "edit" else "Create record" }}</button>
+      </div>
+    </form>
+  </section>
+
+  <template id="custom-field-template">
+    <div class="custom-row">
+      <label>
+        <span>Field name</span>
+        <input name="extra_label[]" placeholder="Insurance provider">
+      </label>
+      <label>
+        <span>Value</span>
+        <input name="extra_value[]" placeholder="Value">
+      </label>
+      <button class="remove-button" type="button" aria-label="Remove custom field">×</button>
+    </div>
+  </template>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

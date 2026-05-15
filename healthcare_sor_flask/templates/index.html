@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}CareRecord | Records{% endblock %}
+
+{% block content %}
+  <section class="search-hero" aria-labelledby="page-title">
+    <div class="logo-word" id="page-title" aria-label="CareRecord">
+      <span class="blue">C</span><span class="red">a</span><span class="yellow">r</span><span class="blue">e</span><span class="green">R</span><span class="red">e</span><span class="blue">c</span><span class="yellow">o</span><span class="green">r</span><span class="red">d</span>
+    </div>
+    <form class="search-box" action="{{ url_for('index') }}" method="get">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        name="q"
+        value="{{ query }}"
+        placeholder="Search patient, ID, doctor, condition, or custom field"
+        aria-label="Search records"
+      >
+      <button type="submit">Search</button>
+    </form>
+    <div class="hero-actions">
+      <a class="soft-button" href="{{ url_for('create_record') }}">Add patient record</a>
+      {% if query %}
+        <a class="soft-button muted" href="{{ url_for('index') }}">Clear search</a>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="records-band" aria-label="Patient records">
+    <div class="section-heading">
+      <div>
+        <h2>Patient records</h2>
+        <p>{{ records|length }} record{{ "" if records|length == 1 else "s" }}{% if query %} matching "{{ query }}"{% endif %}</p>
+      </div>
+    </div>
+
+    {% if records %}
+      <div class="records-grid">
+        {% for record in records %}
+          <article class="record-card">
+            <div class="record-topline">
+              <div>
+                <h3>{{ record.patient_name }}</h3>
+                <p>ID {{ record.patient_id }}</p>
+              </div>
+              <a class="icon-link" href="{{ url_for('view_record', record_id=record.id) }}" aria-label="View {{ record.patient_name }}">›</a>
+            </div>
+            <dl class="mini-fields">
+              <div>
+                <dt>DOB</dt>
+                <dd>{{ record.dob or "Not set" }}</dd>
+              </div>
+              <div>
+                <dt>Condition</dt>
+                <dd>{{ record.medical_condition or "Not set" }}</dd>
+              </div>
+              <div>
+                <dt>Doctor</dt>
+                <dd>{{ record.doctor_name or "Not set" }}</dd>
+              </div>
+            </dl>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h2>No records found</h2>
+        <p>Create the first patient record or adjust your search.</p>
+        <a class="primary-link" href="{{ url_for('create_record') }}">New record</a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

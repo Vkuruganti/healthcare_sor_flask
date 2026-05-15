@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}CareRecord | {{ record.patient_name }}{% endblock %}
+
+{% block content %}
+  <section class="detail-shell">
+    <div class="detail-header">
+      <div>
+        <p>Patient record</p>
+        <h1>{{ record.patient_name }}</h1>
+        <span class="patient-chip">ID {{ record.patient_id }}</span>
+      </div>
+      <div class="detail-actions">
+        <a class="soft-button" href="{{ url_for('edit_record', record_id=record.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('delete_record', record_id=record.id) }}" onsubmit="return confirm('Delete this patient record?');">
+          <button class="danger-button" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <section class="detail-panel">
+        <h2>Patient</h2>
+        <dl class="detail-list">
+          <div><dt>Date of birth</dt><dd>{{ record.dob or "Not set" }}</dd></div>
+          <div><dt>Address</dt><dd>{{ record.patient_address or "Not set" }}</dd></div>
+          <div><dt>Phone</dt><dd>{{ record.patient_phone or "Not set" }}</dd></div>
+          <div><dt>Email</dt><dd>{{ record.patient_email or "Not set" }}</dd></div>
+        </dl>
+      </section>
+
+      <section class="detail-panel">
+        <h2>Care</h2>
+        <dl class="detail-list">
+          <div><dt>Medical condition</dt><dd>{{ record.medical_condition or "Not set" }}</dd></div>
+          <div><dt>Doctor</dt><dd>{{ record.doctor_name or "Not set" }}</dd></div>
+          <div><dt>Doctor ID</dt><dd>{{ record.doctor_id or "Not set" }}</dd></div>
+        </dl>
+      </section>
+
+      <section class="detail-panel wide-panel">
+        <h2>Doctor notes</h2>
+        <p class="notes">{{ record.doctor_notes or "No notes recorded." }}</p>
+      </section>
+
+      {% if record.extra_fields %}
+        <section class="detail-panel wide-panel">
+          <h2>Custom fields</h2>
+          <dl class="detail-list custom-detail-list">
+            {% for label, value in record.extra_fields.items() %}
+              <div><dt>{{ label }}</dt><dd>{{ value or "Not set" }}</dd></div>
+            {% endfor %}
+          </dl>
+        </section>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}
